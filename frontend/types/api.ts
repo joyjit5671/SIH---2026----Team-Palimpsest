@@ -147,9 +147,9 @@ export interface ApplicationDetail extends ApplicationSummary {
 
 export interface PaginatedApplicationsResponse {
   items: ApplicationSummary[];
-  total: int;
-  page: int;
-  page_size: int;
+  total: number;
+  page: number;
+  page_size: number;
 }
 
 export interface DashboardSummary {

@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApprovalFlow AI — AICTE Approval & Compliance System (SIH 2026 PS4)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    /* Subtle scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Top Announcement Bar: Statutory Safeguard -->
+  <div class="bg-blue-950 text-blue-200 text-xs px-4 py-1.5 flex items-center justify-between border-b border-blue-900">
+    <div class="flex items-center space-x-2">
+      <span class="bg-blue-800 text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase font-mono">SIH 2026 PS4</span>
+      <span><strong>ApprovalFlow AI:</strong> Automated AICTE Approval Workflow, EVC Scheduling, Compliance & SLA Monitoring</span>
+    </div>
+    <div class="text-[11px] text-blue-300 hidden md:block">
+      🛡️ Statutory Human Oversight: Routine tasks automated; all decisions human-controlled.
+    </div>
+  </div>
+
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Deep Navy Sidebar -->
+    <aside class="w-64 bg-[#0B192C] text-slate-200 flex flex-col justify-between shrink-0 shadow-xl z-20">
+      <div>
+        <!-- AICTE Emblem & Brand Header -->
+        <div class="p-5 border-b border-slate-800 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-xl shadow-md">
+            AF
+          </div>
+          <div>
+            <h1 class="font-bold text-white text-base leading-tight">ApprovalFlow AI</h1>
+            <div class="text-[11px] text-blue-400 font-medium">AICTE PS4 · 2026-27</div>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="p-3 space-y-1 text-sm font-medium">
+          <button onclick="setTab('dashboard')" id="nav-dashboard" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-blue-600 text-white transition">
+            <div class="flex items-center space-x-3"><span>📊</span><span>Dashboard</span></div>
+          </button>
+          <button onclick="setTab('applications')" id="nav-applications" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition">
+            <div class="flex items-center space-x-3"><span>📂</span><span>Applications</span></div>
+            <span id="badge-app-count" class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full font-mono">7</span>
+          </button>
+          <button onclick="setTab('evc')" id="nav-evc" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition">
+            <div class="flex items-center space-x-3"><span>🏛️</span><span>EVC Queue</span></div>
+            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full font-mono">2</span>
+          </button>
+          <button onclick="setTab('compliance')" id="nav-compliance" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition">
+            <div class="flex items-center space-x-3"><span>⚖️</span><span>Compliance Tracker</span></div>
+            <span class="text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-mono">3</span>
+          </button>
+          <button onclick="setTab('documents')" id="nav-documents" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition">
+            <div class="flex items-center space-x-3"><span>📑</span><span>Document Expiry</span></div>
+            <span class="text-xs bg-red-500/20 text-red-300 px-2 py-0.5 rounded-full font-mono">2</span>
+          </button>
+          <button onclick="setTab('audit')" id="nav-audit" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition">
+            <div class="flex items-center space-x-3"><span>🛡️</span><span>Digital Audit Trail</span></div>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Demonstration Controls -->
+      <div class="p-4 border-t border-slate-800 space-y-2">
+        <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-800 text-xs space-y-2">
+          <div class="flex items-center justify-between font-semibold text-slate-300">
+            <span>SLA Watchdog</span>
+            <span class="text-emerald-400 text-[11px]">● Active</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Automated pendency scanner & SLA alerts active.</p>
+          <button onclick="triggerSlaWatchdog()" class="w-full py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs transition">
+            ⚡ Run Watchdog Scan
+          </button>
+        </div>
+
+        <button onclick="resetDemoData()" class="w-full py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-900/50 rounded-lg text-xs font-semibold transition">
+          🔄 Reset Demo Data
+        </button>
+      </div>
+    </aside>
+
+    <!-- Content Canvas -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+      <!-- Top Action Bar -->
+      <header className="h-16 bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+        <div class="flex items-center space-x-3">
+          <h2 id="page-title" class="text-lg font-bold text-slate-900">Operational Dashboard</h2>
+          <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 font-mono">APH 2026-27</span>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <!-- Role Switcher (PRD Mandated Demo Feature) -->
+          <div class="flex items-center space-x-2 bg-blue-50/70 border border-blue-200 px-3 py-1 rounded-lg">
+            <span class="text-[11px] font-bold text-blue-900 uppercase">Demo Role:</span>
+            <select id="role-select" onchange="changeRole(this.value)" class="bg-white border border-blue-300 rounded px-2 py-0.5 text-xs font-semibold text-blue-900 focus:outline-none">
+              <option value="SCRUTINY_OFFICER">Scrutiny Officer (Er. Priya Sharma)</option>
+              <option value="EVC_COORDINATOR">EVC Coordinator (Prof. S. R. Rao)</option>
+              <option value="SUPERVISOR">Bureau Officer (Dr. Anil S.)</option>
+              <option value="INSTITUTION_REP">Institution Rep (Dr. K. S. Raman)</option>
+              <option value="ADMIN">System Administrator</option>
+            </select>
+          </div>
+
+          <!-- Region Filter -->
+          <select id="region-filter" onchange="filterRegion(this.value)" class="bg-slate-50 border border-slate-300 rounded px-2.5 py-1 text-xs text-slate-700">
+            <option value="ALL">All Regions (National)</option>
+            <option value="Eastern">Eastern Region</option>
+            <option value="Western">Western Region</option>
+            <option value="Northern">Northern Region</option>
+            <option value="Southern">Southern Region</option>
+            <option value="Central">Central Region</option>
+          </select>
+
+          <!-- Notifications Trigger -->
+          <button onclick="toggleNotificationDrawer()" class="relative p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition">
+            <span class="text-lg">🔔</span>
+            <span id="notif-badge" class="absolute top-1 right-1 w-4 h-4 bg-red-600 text-white rounded-full text-[10px] flex items-center justify-center font-bold">4</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Feedback Toast -->
+      <div id="toast" class="hidden fixed top-4 right-4 z-50 px-5 py-3 rounded-lg shadow-xl text-xs font-semibold border flex items-center space-x-2 bg-emerald-50 text-emerald-800 border-emerald-200">
+        <span id="toast-icon">✅</span>
+        <span id="toast-text">Action completed successfully.</span>
+      </div>
+
+      <!-- Tab 1: Dashboard -->
+      <section id="tab-dashboard" class="p-6 space-y-6">
+        <!-- 4 Primary KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Active Cases</div>
+              <div id="kpi-total" class="text-3xl font-extrabold text-slate-900 mt-1">7</div>
+              <div class="text-xs text-slate-500 mt-1"><span id="kpi-approved">1</span> Approved · <span id="kpi-rejected">0</span> Rejected</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">📁</div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">In Scrutiny</div>
+              <div id="kpi-scrutiny" class="text-3xl font-extrabold text-blue-600 mt-1">3</div>
+              <div class="text-xs text-amber-600 mt-1 font-medium"><span id="kpi-returned">1</span> Clarification Pending</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold">🔍</div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">EVC Queue</div>
+              <div id="kpi-evc" class="text-3xl font-extrabold text-indigo-600 mt-1">2</div>
+              <div class="text-xs text-indigo-500 mt-1 font-medium">1 Under SAC/SHC Review</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">🏛️</div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">SLA & Expiry Alerts</div>
+              <div id="kpi-alerts" class="text-3xl font-extrabold text-red-600 mt-1">4</div>
+              <div class="text-xs text-red-500 mt-1 font-medium"><span id="kpi-overdue">2</span> Overdue · <span id="kpi-expiring">2</span> Expiring</div>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-xl font-bold">⚠️</div>
+          </div>
+        </div>
+
+        <!-- Charts & Analytics Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center space-x-2">
+              <span>📈</span>
+              <span>Workflow Stage Distribution</span>
+            </h3>
+            <div class="space-y-3" id="stage-bars">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+            <h3 class="font-bold text-slate-900 text-sm flex items-center space-x-2">
+              <span>⏱️</span>
+              <span>Pendency Ageing Breakdown (SLA Monitoring)</span>
+            </h3>
+            <div class="grid grid-cols-2 gap-3" id="ageing-cards">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 2: Applications Register -->
+      <section id="tab-applications" class="hidden p-6 space-y-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center space-x-2 flex-1 min-w-[260px]">
+            <span class="text-slate-400">🔍</span>
+            <input type="text" id="app-search" oninput="renderApplications()" placeholder="Search by Application No. or Institution Name..." class="w-full text-xs bg-slate-50 border border-slate-200 rounded px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500">
+          </div>
+          <div class="flex items-center space-x-2 text-xs">
+            <span>Filter Stage:</span>
+            <select id="app-stage-filter" onchange="renderApplications()" class="bg-slate-50 border border-slate-200 rounded px-2 py-1.5 text-xs text-slate-700">
+              <option value="">All Stages</option>
+              <option value="SCRUTINY">Scrutiny</option>
+              <option value="EVC">EVC</option>
+              <option value="SAC_SHC">SAC/SHC</option>
+              <option value="FINAL_REVIEW">Final Review</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <th class="py-3 px-4">Application ID</th>
+                <th class="py-3 px-4">Institution Name</th>
+                <th class="py-3 px-4">Region</th>
+                <th class="py-3 px-4">Application Type</th>
+                <th class="py-3 px-4">Current Stage</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Ageing</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="applications-table-body" class="divide-y divide-slate-100">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab 3: EVC Queue -->
+      <section id="tab-evc" class="hidden p-6 space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Expert Visit Committee (EVC) Queue</h3>
+            <p class="text-xs text-slate-500 mt-1">Track physical campus inspections, schedule expert panels, and log findings reports.</p>
+          </div>
+        </div>
+        <div id="evc-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- Tab 4: Compliance Tracker -->
+      <section id="tab-compliance" class="hidden p-6 space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Institutional Undertakings & Continuing Compliance</h3>
+            <p class="text-xs text-slate-500 mt-1">Monitor time-bound regulatory conditions, faculty norms, and barrier-free access fulfillment.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <th class="py-3 px-4">Undertaking Title</th>
+                <th class="py-3 px-4">Institution</th>
+                <th class="py-3 px-4">Regulatory Due Date</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4">Submitted Evidence</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="compliance-table-body" class="divide-y divide-slate-100">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab 5: Document Expiry Vault -->
+      <section id="tab-documents" class="hidden p-6 space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Document Expiry & Lease Validity Vault</h3>
+            <p class="text-xs text-slate-500 mt-1">Lifecycle monitoring for Land Leases, Building Approvals, and Safety NOCs.</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-100/70 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+                <th class="py-3 px-4">Document Type</th>
+                <th class="py-3 px-4">File Name</th>
+                <th class="py-3 px-4">Valid From</th>
+                <th class="py-3 px-4">Expires On</th>
+                <th class="py-3 px-4">Review Status</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="documents-table-body" class="divide-y divide-slate-100">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab 6: Digital Audit Trail -->
+      <section id="tab-audit" class="hidden p-6 space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Immutable Digital Audit Trail</h3>
+            <p class="text-xs text-slate-500 mt-1">Tamper-evident chronological log of all workflow actions, deficiency returns, and committee decisions.</p>
+          </div>
+        </div>
+        <div id="audit-events-container" class="bg-white rounded-xl border border-slate-200 shadow-sm divide-y divide-slate-100">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Notification Drawer -->
+  <div id="notification-drawer" class="hidden fixed inset-y-0 right-0 w-80 bg-white border-l border-slate-200 shadow-2xl z-50 flex flex-col">
+    <div class="p-4 border-b border-slate-200 flex items-center justify-between">
+      <h3 class="font-bold text-sm text-slate-900">Notification Alerts</h3>
+      <button onclick="toggleNotificationDrawer()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
+    </div>
+    <div id="notifications-list" class="flex-1 overflow-y-auto p-4 space-y-3">
+      <!-- Rendered via JS -->
+    </div>
+  </div>
+
+  <!-- Modal: Application Dossier Detail -->
+  <div id="modal-dossier" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200">
+      <div class="p-6 bg-[#0B192C] text-white flex items-center justify-between">
+        <div>
+          <span class="text-xs text-blue-400 font-mono tracking-wider uppercase">Institutional Dossier</span>
+          <h2 id="modal-inst-name" class="text-xl font-bold mt-0.5">National Institute of Science & Technology</h2>
+          <div class="text-xs text-slate-300 mt-1 flex items-center space-x-3">
+            <span>App No: <strong id="modal-app-no" class="font-mono text-white">APP-2026-1001</strong></span>
+            <span>·</span>
+            <span>Route: <strong id="modal-route">SCRUTINY_EVC</strong></span>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-dossier')" class="text-slate-400 hover:text-white text-2xl">✕</button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 flex-1 text-xs">
+        <!-- Visual Workflow Progress Steps -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h4 class="font-bold text-slate-800 text-xs mb-3">Workflow Route Progression</h4>
+          <div class="flex items-center justify-between" id="modal-steps-container">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Deficiency Banner if Returned -->
+        <div id="modal-deficiency-box" class="hidden p-4 bg-amber-50 border border-amber-300 rounded-xl space-y-1.5">
+          <div class="font-bold text-amber-900 flex items-center space-x-2">
+            <span>⚠️</span>
+            <span>Returned to Institution for Clarification</span>
+          </div>
+          <p id="modal-deficiency-text" class="text-amber-800 font-medium"></p>
+          <div class="text-[11px] text-amber-900 pt-1">
+            <strong>Requested Rectification Items:</strong>
+            <ul id="modal-deficiency-items" class="list-disc pl-5 mt-1 space-y-0.5"></ul>
+          </div>
+        </div>
+
+        <!-- Dossier Information Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 text-[10px] uppercase font-semibold">Operational Status</span>
+            <div id="modal-op-status" class="font-bold text-sm text-slate-900 mt-0.5">IN_REVIEW</div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 text-[10px] uppercase font-semibold">Assigned Scrutiny Officer</span>
+            <div id="modal-assigned-officer" class="font-bold text-sm text-slate-900 mt-0.5">Er. Priya Sharma</div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 text-[10px] uppercase font-semibold">Submission Date</span>
+            <div id="modal-submit-date" class="font-bold text-sm text-slate-900 mt-0.5">24 Oct 2026</div>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-slate-400 text-[10px] uppercase font-semibold">Region & State</span>
+            <div id="modal-region-state" class="font-bold text-sm text-slate-900 mt-0.5">Eastern (Odisha)</div>
+          </div>
+        </div>
+
+        <!-- Attached Documents -->
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider">Mandatory Uploaded Dossier Documents</h4>
+          <div id="modal-docs-list" class="border border-slate-200 rounded-xl divide-y divide-slate-100">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Workflow Progression History -->
+        <div class="space-y-2">
+          <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider">Workflow Progression History</h4>
+          <div id="modal-timeline-list" class="border border-slate-200 rounded-xl divide-y divide-slate-100">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between" id="modal-action-footer">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Return for Clarification -->
+  <div id="modal-return" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+      <h3 class="font-bold text-base text-slate-900">Return Application for Clarification</h3>
+      <p class="text-xs text-slate-500">Record specific deficiencies observed. Application moves to 'RETURNED' status awaiting institution compliance.</p>
+      <div class="space-y-1">
+        <label class="text-xs font-semibold text-slate-700">Deficiency Observation (Mandatory):</label>
+        <textarea id="input-return-reason" rows="3" placeholder="State regulatory deficiency observed (e.g. Land Lease deed missing Sub-Registrar endorsement)..." class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg"></textarea>
+      </div>
+      <div class="space-y-1">
+        <label class="text-xs font-semibold text-slate-700">Requested Items (One per line):</label>
+        <textarea id="input-return-items" rows="3" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg font-mono">Updated Notarized Sub-Registrar Lease Endorsement
+Architect Structural Certificate with Council of Architecture stamp</textarea>
+      </div>
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeModal('modal-return')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium">Cancel</button>
+        <button onclick="confirmReturn()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-medium">Confirm Return</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Resubmit Application -->
+  <div id="modal-resubmit" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-slate-200">
+      <h3 class="font-bold text-base text-slate-900">Resubmit Clarification & Evidence</h3>
+      <p class="text-xs text-slate-500">Provide institution response notes explaining how observed deficiencies have been resolved.</p>
+      <div class="space-y-1">
+        <label class="text-xs font-semibold text-slate-700">Institution Response Notes:</label>
+        <textarea id="input-resubmit-notes" rows="4" placeholder="Clarification explanation and description of uploaded rectified evidence..." class="w-full text-xs p-2.5 bg-slate-50 border border-slate-300 rounded-lg"></textarea>
+      </div>
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeModal('modal-resubmit')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium">Cancel</button>
+        <button onclick="confirmResubmit()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium">Confirm Resubmission</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic & Mock Engine Script -->
+  <script>
+    // State store
+    let currentRole = 'SCRUTINY_OFFICER';
+    let currentRegion = 'ALL';
+    let selectedAppId = null;
+
+    // Database Seed
+    const initialData = {
+      applications: [
+        {
+          id: "APP-UUID-1001",
+          number: "APP-2026-1001",
+          institution: "National Institute of Science & Technology (NIST)",
+          region: "Eastern",
+          state: "Odisha",
+          type: "Extension of Approval (EoA) & Course Expansion",
+          stage: "SCRUTINY",
+          status: "IN_REVIEW",
+          assignedTo: "Er. Priya Sharma",
+          route: "SCRUTINY_EVC",
+          submittedAt: "2026-10-24",
+          daysInStage: 6,
+          isOverdue: false,
+          documents: [
+            { id: "DOC-1", type: "Registered Land Lease Agreement", filename: "NIST_Land_Lease_30Yr.pdf", status: "APPROACHING_EXPIRY", expiresOn: "2026-11-17" },
+            { id: "DOC-2", type: "Building Safety & Structural Certificate", filename: "PWD_Structural_2026.pdf", status: "VALID", expiresOn: "2027-10-15" }
+          ],
+          timeline: [
+            { action: "APPLICATION_SUBMISSION", reason: "Initial application submitted with self-disclosure", actor: "Dr. K. S. Raman (Registrar)", role: "INSTITUTION_REP", date: "2026-10-24" },
+            { action: "ASSIGNMENT", reason: "Assigned to regional scrutiny officer", actor: "Dr. Anil Sahasrabudhe", role: "SUPERVISOR", date: "2026-10-25" },
+            { action: "SCRUTINY_IN_PROGRESS", reason: "Norms check for instructional labs", actor: "Er. Priya Sharma", role: "SCRUTINY_OFFICER", date: "2026-10-28" }
+          ]
+        },
+        {
+          id: "APP-UUID-1002",
+          number: "APP-2026-1002",
+          institution: "Maharashtra Polytechnic & Research Academy",
+          region: "Western",
+          state: "Maharashtra",
+          type: "Increase in Intake (Computer Engineering)",
+          stage: "SCRUTINY",
+          status: "RETURNED",
+          assignedTo: "Er. Priya Sharma",
+          route: "SCRUTINY_EVC",
+          submittedAt: "2026-10-18",
+          daysInStage: 12,
+          isOverdue: false,
+          returnReason: "Registered Land Lease deed document is missing required Sub-Registrar stamp endorsement for Plot B expansion area.",
+          requestedItems: [
+            "Upload notarized Sub-Registrar endorsement copy",
+            "Updated Khasra/Khatauni verification certificate"
+          ],
+          documents: [
+            { id: "DOC-3", type: "State Fire Safety NOC", filename: "MPRA_Fire_NOC.pdf", status: "EXPIRED", expiresOn: "2026-10-28" }
+          ],
+          timeline: [
+            { action: "APPLICATION_SUBMISSION", reason: "Submitted for intake expansion", actor: "Admin MPRA", role: "INSTITUTION_REP", date: "2026-10-18" },
+            { action: "RETURN_FOR_CLARIFICATION", reason: "Sub-Registrar endorsement missing for Plot B expansion area.", actor: "Er. Priya Sharma", role: "SCRUTINY_OFFICER", date: "2026-10-29" }
+          ]
+        },
+        {
+          id: "APP-UUID-1003",
+          number: "APP-2026-1003",
+          institution: "Bharath Institute of Advanced Engineering",
+          region: "Southern",
+          state: "Tamil Nadu",
+          type: "New Technical Institution Establishment",
+          stage: "EVC",
+          status: "IN_REVIEW",
+          assignedTo: "Prof. S. R. Rao",
+          route: "EVC_SAC_SHC",
+          submittedAt: "2026-10-08",
+          daysInStage: 22,
+          isOverdue: true,
+          documents: [
+            { id: "DOC-4", type: "AICTE General Undertaking Affidavit", filename: "BIAET_Affidavit_Format1.pdf", status: "VALID", expiresOn: "2027-09-30" }
+          ],
+          timeline: [
+            { action: "TRANSITION_TO_EVC", reason: "Scrutiny cleared, scheduled for physical inspection", actor: "Er. Priya Sharma", role: "SCRUTINY_OFFICER", date: "2026-10-20" }
+          ]
+        },
+        {
+          id: "APP-UUID-1004",
+          number: "APP-2026-1004",
+          institution: "Delhi NCR Institute of Applied Technology",
+          region: "Northern",
+          state: "Uttar Pradesh",
+          type: "Introduction of Supernumerary Seats for NRI/FN",
+          stage: "SAC_SHC",
+          status: "IN_REVIEW",
+          assignedTo: "Dr. Anil Sahasrabudhe",
+          route: "EVC_SAC_SHC",
+          submittedAt: "2026-09-30",
+          daysInStage: 30,
+          isOverdue: true,
+          documents: [],
+          timeline: []
+        },
+        {
+          id: "APP-UUID-1005",
+          number: "APP-2026-1005",
+          institution: "Central India Institute of Management",
+          region: "Central",
+          state: "Madhya Pradesh",
+          type: "Extension of Approval (EoA) Standard",
+          stage: "FINAL_REVIEW",
+          status: "IN_REVIEW",
+          assignedTo: "Dr. Anil Sahasrabudhe",
+          route: "SCRUTINY_ONLY",
+          submittedAt: "2026-10-12",
+          daysInStage: 18,
+          isOverdue: true,
+          documents: [],
+          timeline: []
+        },
+        {
+          id: "APP-UUID-1006",
+          number: "APP-2026-1006",
+          institution: "National Institute of Science & Technology (NIST)",
+          region: "Eastern",
+          state: "Odisha",
+          type: "Extension of Approval (EoA)",
+          stage: "COMPLETED",
+          status: "APPROVED",
+          assignedTo: "Dr. Anil Sahasrabudhe",
+          route: "SCRUTINY_ONLY",
+          submittedAt: "2026-08-01",
+          daysInStage: 90,
+          isOverdue: false,
+          documents: [],
+          timeline: []
+        },
+        {
+          id: "APP-UUID-1007",
+          number: "APP-2026-1007",
+          institution: "Maharashtra Polytechnic & Research Academy",
+          region: "Western",
+          state: "Maharashtra",
+          type: "Establishment of New Diploma Institute",
+          stage: "SCRUTINY",
+          status: "IN_REVIEW",
+          assignedTo: "Unassigned",
+          route: "SCRUTINY_EVC",
+          submittedAt: "2026-10-04",
+          daysInStage: 26,
+          isOverdue: true,
+          documents: [],
+          timeline: []
+        }
+      ],
+      evc: [
+        {
+          id: "EVC-1",
+          appNumber: "APP-2026-1003",
+          institution: "Bharath Institute of Advanced Engineering",
+          region: "Southern",
+          status: "SCHEDULED",
+          scheduledAt: "2026-11-04",
+          team: "Prof. H. B. Srivastava (Chairman), Dr. K. Meenakshi (Expert)",
+          notes: "Physical inspection of laboratories, workshops, and barrier-free access."
+        },
+        {
+          id: "EVC-2",
+          appNumber: "APP-2026-1004",
+          institution: "Delhi NCR Institute of Applied Technology",
+          region: "Northern",
+          status: "COMPLETED",
+          scheduledAt: "2026-10-20",
+          team: "Prof. N. K. Garg (Convener), Dr. R. Sengupta (Member)",
+          reportSummary: "EVC physical inspection verified 18 instructional classrooms and 6 labs. Recommended for SAC/SHC committee scrutiny."
+        }
+      ],
+      compliance: [
+        {
+          id: "UND-1",
+          title: "Appointment of Regular Professor Cadre in AI/Data Science",
+          institution: "National Institute of Science & Technology",
+          dueDate: "2026-11-04",
+          status: "PENDING",
+          description: "Compliance undertaking under Regulation 4.2 to appoint 2 regular Professors before start of semester."
+        },
+        {
+          id: "UND-2",
+          title: "Fire Safety Sprinkler System Commissioning",
+          institution: "Maharashtra Polytechnic & Research Academy",
+          dueDate: "2026-11-13",
+          status: "EVIDENCE_SUBMITTED",
+          evidenceFilename: "Fire_Sprinkler_Commissioning_Report_2026.pdf",
+          description: "Installation and municipal safety clearance of sprinkler system."
+        },
+        {
+          id: "UND-3",
+          title: "Barrier-Free Ramp & Lift Installation in Admin Block",
+          institution: "Maharashtra Polytechnic & Research Academy",
+          dueDate: "2026-10-26",
+          status: "OVERDUE",
+          description: "Compliance under Persons with Disabilities Act for accessible access to upper floors."
+        }
+      ],
+      documents: [
+        { id: "DOC-01", type: "Registered Land Lease Agreement", filename: "NIST_Land_Lease_Agreement_30Yr.pdf", validFrom: "2023-11-18", expiresOn: "2026-11-17", status: "APPROACHING_EXPIRY" },
+        { id: "DOC-02", type: "Building Safety & Structural Certificate", filename: "PWD_Structural_Stability_Certificate_2026.pdf", validFrom: "2026-04-13", expiresOn: "2028-04-12", status: "VALID" },
+        { id: "DOC-03", type: "State Fire Safety NOC", filename: "MPRA_Fire_NOC_Renewal_2025.pdf", validFrom: "2025-10-29", expiresOn: "2026-10-28", status: "EXPIRED" },
+        { id: "DOC-04", type: "AICTE General Undertaking Affidavit", filename: "BIAET_Affidavit_Format1_Notarized.pdf", validFrom: "2026-09-30", expiresOn: "2027-09-30", status: "VALID" }
+      ],
+      notifications: [
+        { id: "N-1", role: "INSTITUTION_REP", severity: "WARNING", message: "Clarification required for APP-2026-1002: Registered Land Lease deed document missing Sub-Registrar endorsement.", time: "1 day ago" },
+        { id: "N-2", role: "SUPERVISOR", severity: "CRITICAL", message: "ESCALATION: Compliance undertaking 'Barrier-Free Ramp & Lift Installation' is OVERDUE for 4 days.", time: "8 hours ago" },
+        { id: "N-3", role: "INSTITUTION_REP", severity: "WARNING", message: "Document Expiry Alert: Land Lease Agreement expires in 18 days (Renewal required).", time: "2 days ago" },
+        { id: "N-4", role: "EVC_COORDINATOR", severity: "INFO", message: "EVC Inspection for BIAET Chennai scheduled on 2026-11-04.", time: "3 days ago" }
+      ],
+      audit: [
+        { id: "A-1", actor: "Er. Priya Sharma", role: "SCRUTINY_OFFICER", action: "RETURN_FOR_CLARIFICATION", entity: "APPLICATION", reason: "Sub-Registrar endorsement missing for Plot B expansion area.", time: "Yesterday, 14:32" },
+        { id: "A-2", actor: "Prof. S. R. Rao", role: "EVC_COORDINATOR", action: "SCHEDULE_EVC_VISIT", entity: "EVC", reason: "Committee panel finalized for BIAET Chennai", time: "3 days ago" },
+        { id: "A-3", actor: "System SLA Watchdog", role: "SYSTEM", action: "ESCALATE_OVERDUE_COMPLIANCE", entity: "COMPLIANCE", reason: "Due date passed without evidence submission", time: "8 hours ago" }
+      ]
+    };
+
+    let state = JSON.parse(JSON.stringify(initialData));
+
+    function showToast(text, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      const toastIcon = document.getElementById('toast-icon');
+      toast.className = `fixed top-4 right-4 z-50 px-5 py-3 rounded-lg shadow-xl text-xs font-semibold border flex items-center space-x-2 transition-all ${
+        isError ? 'bg-red-50 text-red-800 border-red-200' : 'bg-emerald-50 text-emerald-800 border-emerald-200'
+      }`;
+      toastIcon.textContent = isError ? '⚠️' : '✅';
+      toastText.textContent = text;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 4000);
+    }
+
+    function setTab(tab) {
+      ['dashboard', 'applications', 'evc', 'compliance', 'documents', 'audit'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const navBtn = document.getElementById(`nav-${t}`);
+        navBtn.className = 'w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 transition';
+      });
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`nav-${tab}`).className = 'w-full flex items-center justify-between px-3 py-2.5 rounded-lg bg-blue-600 text-white transition';
+      document.getElementById('page-title').textContent = tab.charAt(0).toUpperCase() + tab.slice(1).replace('_', ' ');
+
+      if (tab === 'dashboard') renderDashboard();
+      if (tab === 'applications') renderApplications();
+      if (tab === 'evc') renderEVC();
+      if (tab === 'compliance') renderCompliance();
+      if (tab === 'documents') renderDocuments();
+      if (tab === 'audit') renderAudit();
+    }
+
+    function changeRole(role) {
+      currentRole = role;
+      showToast(`Switched active demo persona to: ${role}`);
+      renderNotifications();
+      if (selectedAppId) renderModalActions(state.applications.find(a => a.id === selectedAppId));
+    }
+
+    function filterRegion(reg) {
+      currentRegion = reg;
+      renderDashboard();
+      renderApplications();
+      showToast(`Filtered view for region: ${reg}`);
+    }
+
+    function toggleNotificationDrawer() {
+      const drawer = document.getElementById('notification-drawer');
+      drawer.classList.toggle('hidden');
+      renderNotifications();
+    }
+
+    function renderDashboard() {
+      const filtered = currentRegion === 'ALL' ? state.applications : state.applications.filter(a => a.region === currentRegion);
+      const total = filtered.length;
+      const scrutiny = filtered.filter(a => a.stage === 'SCRUTINY' && a.status !== 'RETURNED').length;
+      const evc = filtered.filter(a => a.stage === 'EVC').length;
+      const returned = filtered.filter(a => a.status === 'RETURNED').length;
+      const approved = filtered.filter(a => a.status === 'APPROVED').length;
+      const rejected = filtered.filter(a => a.status === 'REJECTED').length;
+      const overdue = filtered.filter(a => a.daysInStage > 14 && a.status !== 'APPROVED').length;
+
+      document.getElementById('kpi-total').textContent = total;
+      document.getElementById('kpi-approved').textContent = approved;
+      document.getElementById('kpi-rejected').textContent = rejected;
+      document.getElementById('kpi-scrutiny').textContent = scrutiny;
+      document.getElementById('kpi-returned').textContent = returned;
+      document.getElementById('kpi-evc').textContent = evc;
+      document.getElementById('kpi-alerts').textContent = overdue + 2;
+      document.getElementById('kpi-overdue').textContent = overdue;
+
+      // Stage Distribution Bars
+      const stages = ['SCRUTINY', 'EVC', 'SAC_SHC', 'FINAL_REVIEW', 'COMPLETED'];
+      const stageContainer = document.getElementById('stage-bars');
+      stageContainer.innerHTML = stages.map(s => {
+        const count = filtered.filter(a => a.stage === s).length;
+        const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+        return `
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-medium text-slate-700">
+              <span>${s.replace('_', ' ')}</span>
+              <span class="font-mono text-slate-500">${count} (${pct}%)</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full bg-blue-600 rounded-full transition-all duration-500" style="width: ${Math.max(pct, 5)}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Ageing breakdown
+      const b1 = filtered.filter(a => a.daysInStage < 7 && a.status !== 'APPROVED').length;
+      const b2 = filtered.filter(a => a.daysInStage >= 7 && a.daysInStage <= 14 && a.status !== 'APPROVED').length;
+      const b3 = filtered.filter(a => a.daysInStage > 14 && a.daysInStage <= 30 && a.status !== 'APPROVED').length;
+      const b4 = filtered.filter(a => a.daysInStage > 30 && a.status !== 'APPROVED').length;
+
+      document.getElementById('ageing-cards').innerHTML = `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+          <span class="text-xs font-medium text-slate-500">&lt; 7 days (Normal)</span>
+          <div class="text-2xl font-black mt-1 text-slate-900 font-mono">${b1}</div>
+        </div>
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+          <span class="text-xs font-medium text-slate-500">7 - 14 days (Approaching)</span>
+          <div class="text-2xl font-black mt-1 text-slate-900 font-mono">${b2}</div>
+        </div>
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <span class="text-xs font-medium text-amber-700">15 - 30 days (SLA Warning)</span>
+          <div class="text-2xl font-black mt-1 text-amber-900 font-mono">${b3}</div>
+        </div>
+        <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+          <span class="text-xs font-medium text-red-700">&gt; 30 days (Critical Bottleneck)</span>
+          <div class="text-2xl font-black mt-1 text-red-900 font-mono">${b4}</div>
+        </div>
+      `;
+    }
+
+    function renderApplications() {
+      const search = document.getElementById('app-search')?.value.toLowerCase() || '';
+      const stage = document.getElementById('app-stage-filter')?.value || '';
+      const tbody = document.getElementById('applications-table-body');
+
+      const filtered = state.applications.filter(a => {
+        const matchSearch = a.number.toLowerCase().includes(search) || a.institution.toLowerCase().includes(search);
+        const matchStage = stage ? a.stage === stage : true;
+        const matchRegion = currentRegion === 'ALL' ? true : a.region === currentRegion;
+        return matchSearch && matchStage && matchRegion;
+      });
+
+      tbody.innerHTML = filtered.map(app => `
+        <tr class="hover:bg-slate-50/70 transition">
+          <td class="py-3 px-4 font-mono font-bold text-blue-600">${app.number}</td>
+          <td class="py-3 px-4 font-medium text-slate-900 max-w-xs truncate">${app.institution}</td>
+          <td class="py-3 px-4 text-slate-600">${app.region}</td>
+          <td class="py-3 px-4 text-slate-600 max-w-xs truncate">${app.type}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full font-mono text-[11px] bg-slate-100 text-slate-700 border border-slate-200">${app.stage}</span>
+          </td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full font-semibold text-[11px] ${
+              app.status === 'APPROVED' ? 'bg-emerald-100 text-emerald-800' :
+              app.status === 'RETURNED' ? 'bg-amber-100 text-amber-800' :
+              app.status === 'REJECTED' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+            }">${app.status}</span>
+          </td>
+          <td class="py-3 px-4 font-mono">
+            <span class="${app.daysInStage > 14 && app.status !== 'APPROVED' ? 'text-red-600 font-bold' : 'text-slate-600'}">
+              ${app.daysInStage}d ${app.daysInStage > 14 && app.status !== 'APPROVED' ? '⚠️ SLA' : ''}
+            </span>
+          </td>
+          <td class="py-3 px-4 text-right">
+            <button onclick="openDossier('${app.id}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded font-medium transition">
+              Open Dossier
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openDossier(id) {
+      selectedAppId = id;
+      const app = state.applications.find(a => a.id === id);
+      if (!app) return;
+
+      document.getElementById('modal-inst-name').textContent = app.institution;
+      document.getElementById('modal-app-no').textContent = app.number;
+      document.getElementById('modal-route').textContent = app.route;
+      document.getElementById('modal-op-status').textContent = app.status;
+      document.getElementById('modal-assigned-officer').textContent = app.assignedTo;
+      document.getElementById('modal-submit-date').textContent = app.submittedAt;
+      document.getElementById('modal-region-state').textContent = `${app.region} (${app.state})`;
+
+      // Render Step Progression
+      const stages = ['SCRUTINY', 'EVC', 'SAC_SHC', 'FINAL_REVIEW', 'COMPLETED'];
+      const currIdx = stages.indexOf(app.stage);
+      document.getElementById('modal-steps-container').innerHTML = stages.map((st, idx) => {
+        const isDone = currIdx > idx || app.status === 'APPROVED';
+        const isCurrent = app.stage === st;
+        return `
+          <div class="flex-1 flex flex-col items-center">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+              isDone ? 'bg-emerald-600 text-white' : isCurrent ? 'bg-blue-600 text-white ring-4 ring-blue-100' : 'bg-slate-200 text-slate-500'
+            }">${isDone ? '✓' : idx + 1}</div>
+            <span class="mt-2 font-medium text-[11px] ${isCurrent ? 'text-blue-600 font-bold' : 'text-slate-600'}">${st.replace('_', ' ')}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Deficiency banner
+      const defBox = document.getElementById('modal-deficiency-box');
+      if (app.status === 'RETURNED') {
+        defBox.classList.remove('hidden');
+        document.getElementById('modal-deficiency-text').textContent = `"${app.returnReason}"`;
+        document.getElementById('modal-deficiency-items').innerHTML = (app.requestedItems || []).map(i => `<li>${i}</li>`).join('');
+      } else {
+        defBox.classList.add('hidden');
+      }
+
+      // Documents
+      document.getElementById('modal-docs-list').innerHTML = (app.documents.length ? app.documents : [
+        { type: "Registration & Affiliation Proof", filename: "Affiliation_Document_2026.pdf", status: "VALID" }
+      ]).map(d => `
+        <div class="p-3 flex items-center justify-between">
+          <div>
+            <div class="font-bold text-slate-800">${d.type}</div>
+            <div class="text-[11px] font-mono text-slate-500">${d.filename}</div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full font-semibold text-[10px] ${
+            d.status === 'VALID' ? 'bg-emerald-100 text-emerald-800' :
+            d.status === 'APPROACHING_EXPIRY' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'
+          }">${d.status}</span>
+        </div>
+      `).join('');
+
+      // Timeline
+      document.getElementById('modal-timeline-list').innerHTML = app.timeline.map(t => `
+        <div class="p-3 flex items-start justify-between">
+          <div>
+            <div class="font-bold text-slate-800">${t.action}</div>
+            <div class="text-slate-600">${t.reason}</div>
+            <div class="text-[10px] text-slate-400">By ${t.actor} (${t.role})</div>
+          </div>
+          <span class="font-mono text-[10px] text-slate-400">${t.date}</span>
+        </div>
+      `).join('');
+
+      renderModalActions(app);
+      document.getElementById('modal-dossier').classList.remove('hidden');
+    }
+
+    function renderModalActions(app) {
+      const footer = document.getElementById('modal-action-footer');
+      let buttons = '';
+
+      if (currentRole === 'SCRUTINY_OFFICER' && app.status === 'IN_REVIEW' && app.stage === 'SCRUTINY') {
+        buttons = `
+          <button onclick="openModal('modal-return')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-medium">Return for Clarification</button>
+          <button onclick="advanceStage('${app.id}', 'EVC')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium">Pass Scrutiny → Route to EVC</button>
+        `;
+      } else if (currentRole === 'INSTITUTION_REP' && app.status === 'RETURNED') {
+        buttons = `
+          <button onclick="openModal('modal-resubmit')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium">Resubmit Clarification &amp; Evidence</button>
+        `;
+      } else if (currentRole === 'SUPERVISOR' && app.status === 'IN_REVIEW') {
+        buttons = `
+          <button onclick="statutoryDecision('${app.id}', 'REJECT')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-medium">Statutory Rejection</button>
+          <button onclick="statutoryDecision('${app.id}', 'APPROVE')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium">Grant Statutory Approval</button>
+        `;
+      } else {
+        buttons = `<span class="text-slate-400 italic text-xs">No pending action for ${currentRole} in current status.</span>`;
+      }
+
+      footer.innerHTML = `
+        <span class="text-[11px] text-slate-500">Authorized actions for: <strong>${currentRole}</strong></span>
+        <div class="flex space-x-2">${buttons}</div>
+      `;
+    }
+
+    function advanceStage(appId, nextStage) {
+      const app = state.applications.find(a => a.id === appId);
+      if (!app) return;
+      const prevStage = app.stage;
+      app.stage = nextStage;
+      app.status = 'IN_REVIEW';
+      app.timeline.unshift({
+        action: `STAGE_TRANSITION_${nextStage}`,
+        reason: `Scrutiny checks cleared. Routed to ${nextStage}`,
+        actor: "Er. Priya Sharma",
+        role: "SCRUTINY_OFFICER",
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      // Add audit
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Er. Priya Sharma",
+        role: "SCRUTINY_OFFICER",
+        action: `TRANSITION_TO_${nextStage}`,
+        entity: "APPLICATION",
+        reason: `Application advanced from ${prevStage} to ${nextStage}`,
+        time: "Just now"
+      });
+
+      // Add to EVC queue if EVC
+      if (nextStage === 'EVC' && !state.evc.some(e => e.appNumber === app.number)) {
+        state.evc.unshift({
+          id: `EVC-${Date.now()}`,
+          appNumber: app.number,
+          institution: app.institution,
+          region: app.region,
+          status: "PENDING_SCHEDULE",
+          team: "Unassigned",
+          notes: "Automated routing from scrutiny clearance"
+        });
+      }
+
+      showToast(`Application ${app.number} advanced to ${nextStage} stage.`);
+      closeModal('modal-dossier');
+      renderDashboard();
+      renderApplications();
+      renderEVC();
+    }
+
+    function confirmReturn() {
+      const reason = document.getElementById('input-return-reason').value.trim();
+      const items = document.getElementById('input-return-items').value.split('\n').filter(i => i.trim());
+      if (reason.length < 3) {
+        alert('Please provide a valid deficiency reason (minimum 3 characters).');
+        return;
+      }
+      const app = state.applications.find(a => a.id === selectedAppId);
+      if (!app) return;
+
+      app.status = 'RETURNED';
+      app.returnReason = reason;
+      app.requestedItems = items;
+      app.timeline.unshift({
+        action: "RETURN_FOR_CLARIFICATION",
+        reason: reason,
+        actor: "Er. Priya Sharma",
+        role: "SCRUTINY_OFFICER",
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Er. Priya Sharma",
+        role: "SCRUTINY_OFFICER",
+        action: "RETURN_FOR_CLARIFICATION",
+        entity: "APPLICATION",
+        reason: reason,
+        time: "Just now"
+      });
+
+      state.notifications.unshift({
+        id: `N-${Date.now()}`,
+        role: "INSTITUTION_REP",
+        severity: "WARNING",
+        message: `Clarification required for ${app.number}: ${reason}`,
+        time: "Just now"
+      });
+
+      showToast(`Application ${app.number} returned for clarification.`);
+      closeModal('modal-return');
+      closeModal('modal-dossier');
+      renderDashboard();
+      renderApplications();
+    }
+
+    function confirmResubmit() {
+      const notes = document.getElementById('input-resubmit-notes').value.trim();
+      if (notes.length < 3) {
+        alert('Please provide clarification notes regarding updates made.');
+        return;
+      }
+      const app = state.applications.find(a => a.id === selectedAppId);
+      if (!app) return;
+
+      app.status = 'IN_REVIEW';
+      app.timeline.unshift({
+        action: "RESUBMISSION_BY_INSTITUTION",
+        reason: notes,
+        actor: "Dr. K. S. Raman (Registrar)",
+        role: "INSTITUTION_REP",
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Dr. K. S. Raman",
+        role: "INSTITUTION_REP",
+        action: "RESUBMISSION",
+        entity: "APPLICATION",
+        reason: notes,
+        time: "Just now"
+      });
+
+      showToast(`Application ${app.number} resubmitted with clarifications.`);
+      closeModal('modal-resubmit');
+      closeModal('modal-dossier');
+      renderDashboard();
+      renderApplications();
+    }
+
+    function statutoryDecision(appId, decision) {
+      const remarks = prompt(`Enter authorized statutory remarks for ${decision}:`, `Statutory ${decision.toLowerCase()} granted by competent committee.`);
+      if (!remarks) return;
+      const app = state.applications.find(a => a.id === appId);
+      if (!app) return;
+
+      app.status = decision;
+      app.stage = 'COMPLETED';
+      app.timeline.unshift({
+        action: `STATUTORY_${decision}`,
+        reason: remarks,
+        actor: "Dr. Anil Sahasrabudhe (Committee)",
+        role: "SUPERVISOR",
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Dr. Anil Sahasrabudhe",
+        role: "SUPERVISOR",
+        action: `STATUTORY_${decision}`,
+        entity: "APPLICATION",
+        reason: remarks,
+        time: "Just now"
+      });
+
+      showToast(`Statutory ${decision} recorded by authorized committee.`);
+      closeModal('modal-dossier');
+      renderDashboard();
+      renderApplications();
+    }
+
+    function renderEVC() {
+      const container = document.getElementById('evc-cards-container');
+      container.innerHTML = state.evc.map(evc => `
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-xs font-bold text-blue-600">${evc.appNumber}</span>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold ${
+              evc.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' :
+              evc.status === 'SCHEDULED' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'
+            }">${evc.status}</span>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-slate-900">${evc.institution}</h4>
+            <p class="text-xs text-slate-500">${evc.region} Region</p>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1">
+            <div><strong>Scheduled Date:</strong> ${evc.scheduledAt || 'Pending Scheduling'}</div>
+            <div><strong>Assigned Team:</strong> ${evc.team || 'Unassigned'}</div>
+            ${evc.reportSummary ? `<div class="text-slate-700 mt-2 pt-2 border-t border-slate-200"><strong>Report:</strong> ${evc.reportSummary}</div>` : ''}
+          </div>
+          <div class="pt-2 flex justify-end space-x-2">
+            ${evc.status === 'PENDING_SCHEDULE' && currentRole === 'EVC_COORDINATOR' ? `
+              <button onclick="scheduleEVC('${evc.id}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium">Schedule Inspection Visit</button>
+            ` : ''}
+            ${evc.status === 'SCHEDULED' && currentRole === 'EVC_COORDINATOR' ? `
+              <button onclick="completeEVC('${evc.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-medium">Submit Inspection Findings</button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function scheduleEVC(id) {
+      const date = prompt("Enter scheduled inspection date (YYYY-MM-DD):", "2026-11-12");
+      if (!date) return;
+      const team = prompt("Enter assigned expert committee members:", "Prof. A. K. Sen (Convener), Dr. R. Iyer (Expert)");
+      if (!team) return;
+      const evc = state.evc.find(e => e.id === id);
+      if (!evc) return;
+
+      evc.status = 'SCHEDULED';
+      evc.scheduledAt = date;
+      evc.team = team;
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Prof. S. R. Rao",
+        role: "EVC_COORDINATOR",
+        action: "SCHEDULE_EVC_VISIT",
+        entity: "EVC",
+        reason: `Inspection scheduled for ${date} with ${team}`,
+        time: "Just now"
+      });
+
+      showToast(`EVC inspection scheduled for ${evc.appNumber}.`);
+      renderEVC();
+    }
+
+    function completeEVC(id) {
+      const report = prompt("Enter EVC inspection findings summary:", "Physical laboratories, workshops, and faculty verified compliant with APH norms.");
+      if (!report) return;
+      const evc = state.evc.find(e => e.id === id);
+      if (!evc) return;
+
+      evc.status = 'COMPLETED';
+      evc.reportSummary = report;
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Prof. S. R. Rao",
+        role: "EVC_COORDINATOR",
+        action: "COMPLETE_EVC_INSPECTION",
+        entity: "EVC",
+        reason: report,
+        time: "Just now"
+      });
+
+      showToast("EVC inspection completed and report submitted.");
+      renderEVC();
+    }
+
+    function renderCompliance() {
+      const tbody = document.getElementById('compliance-table-body');
+      tbody.innerHTML = state.compliance.map(c => `
+        <tr class="hover:bg-slate-50/70 transition">
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-900">${c.title}</div>
+            <div class="text-slate-500 text-[11px] max-w-sm truncate">${c.description}</div>
+          </td>
+          <td class="py-3 px-4 font-medium text-slate-700">${c.institution}</td>
+          <td class="py-3 px-4 font-mono">${c.dueDate}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full font-semibold text-[11px] ${
+              c.status === 'VERIFIED_CLOSED' ? 'bg-emerald-100 text-emerald-800' :
+              c.status === 'OVERDUE' ? 'bg-red-100 text-red-800' :
+              c.status === 'EVIDENCE_SUBMITTED' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'
+            }">${c.status.replace('_', ' ')}</span>
+          </td>
+          <td class="py-3 px-4 text-slate-600">
+            ${c.evidenceFilename ? `<span class="font-mono text-blue-600 underline">${c.evidenceFilename}</span>` : '<span class="text-slate-400 italic">None attached</span>'}
+          </td>
+          <td class="py-3 px-4 text-right space-x-1">
+            ${c.status === 'PENDING' && currentRole === 'INSTITUTION_REP' ? `
+              <button onclick="submitComplianceEvidence('${c.id}')" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-medium">Upload Evidence</button>
+            ` : ''}
+            ${c.status === 'EVIDENCE_SUBMITTED' && (currentRole === 'SCRUTINY_OFFICER' || currentRole === 'SUPERVISOR') ? `
+              <button onclick="verifyCompliance('${c.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-medium">Verify &amp; Close</button>
+            ` : ''}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function submitComplianceEvidence(id) {
+      const file = prompt("Enter compliance evidence filename:", "Professor_Cadre_Appointment_Orders_Gazetted.pdf");
+      if (!file) return;
+      const c = state.compliance.find(i => i.id === id);
+      if (!c) return;
+
+      c.status = 'EVIDENCE_SUBMITTED';
+      c.evidenceFilename = file;
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Dr. K. S. Raman",
+        role: "INSTITUTION_REP",
+        action: "SUBMIT_COMPLIANCE_EVIDENCE",
+        entity: "COMPLIANCE",
+        reason: `Evidence uploaded: ${file}`,
+        time: "Just now"
+      });
+
+      showToast("Compliance evidence submitted for officer review.");
+      renderCompliance();
+    }
+
+    function verifyCompliance(id) {
+      const c = state.compliance.find(i => i.id === id);
+      if (!c) return;
+      c.status = 'VERIFIED_CLOSED';
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Er. Priya Sharma",
+        role: "SCRUTINY_OFFICER",
+        action: "COMPLIANCE_VERIFIED_CLOSED",
+        entity: "COMPLIANCE",
+        reason: "Evidence verified compliant with AICTE norms",
+        time: "Just now"
+      });
+
+      showToast(`Undertaking '${c.title}' verified and closed.`);
+      renderCompliance();
+    }
+
+    function renderDocuments() {
+      const tbody = document.getElementById('documents-table-body');
+      tbody.innerHTML = state.documents.map(d => `
+        <tr class="hover:bg-slate-50/70 transition">
+          <td class="py-3 px-4 font-bold text-slate-900">${d.type}</td>
+          <td class="py-3 px-4 font-mono text-slate-600">${d.filename}</td>
+          <td class="py-3 px-4 font-mono">${d.validFrom || '—'}</td>
+          <td class="py-3 px-4 font-mono">${d.expiresOn || '—'}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded-full font-semibold text-[11px] ${
+              d.status === 'VALID' ? 'bg-emerald-100 text-emerald-800' :
+              d.status === 'APPROACHING_EXPIRY' ? 'bg-amber-100 text-amber-800' :
+              d.status === 'RENEWAL_SUBMITTED' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
+            }">${d.status.replace('_', ' ')}</span>
+          </td>
+          <td class="py-3 px-4 text-right space-x-1">
+            ${(d.status === 'EXPIRED' || d.status === 'APPROACHING_EXPIRY') && currentRole === 'INSTITUTION_REP' ? `
+              <button onclick="renewDocument('${d.id}')" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-medium">Upload Renewal</button>
+            ` : ''}
+            ${d.status === 'RENEWAL_SUBMITTED' && (currentRole === 'SCRUTINY_OFFICER' || currentRole === 'SUPERVISOR') ? `
+              <button onclick="verifyDocument('${d.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[11px] font-medium">Verify Renewal</button>
+            ` : ''}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renewDocument(id) {
+      const file = prompt("Enter renewed document file:", "Renewed_Fire_NOC_2026.pdf");
+      if (!file) return;
+      const d = state.documents.find(i => i.id === id);
+      if (!d) return;
+
+      d.status = 'RENEWAL_SUBMITTED';
+      d.filename = file;
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Dr. K. S. Raman",
+        role: "INSTITUTION_REP",
+        action: "DOCUMENT_RENEWAL_SUBMITTED",
+        entity: "DOCUMENT",
+        reason: `Renewal submitted: ${file}`,
+        time: "Just now"
+      });
+
+      showToast("Renewed document submitted for verification.");
+      renderDocuments();
+    }
+
+    function verifyDocument(id) {
+      const d = state.documents.find(i => i.id === id);
+      if (!d) return;
+      d.status = 'VALID';
+
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "Er. Priya Sharma",
+        role: "SCRUTINY_OFFICER",
+        action: "DOCUMENT_VERIFIED",
+        entity: "DOCUMENT",
+        reason: "Renewed certificate confirmed compliant",
+        time: "Just now"
+      });
+
+      showToast("Document verified as VALID.");
+      renderDocuments();
+    }
+
+    function renderAudit() {
+      const container = document.getElementById('audit-events-container');
+      container.innerHTML = state.audit.map(a => `
+        <div class="p-4 flex items-start justify-between hover:bg-slate-50/70 transition">
+          <div class="space-y-1">
+            <div class="flex items-center space-x-2">
+              <span class="font-mono text-xs font-bold text-slate-900">${a.action}</span>
+              <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 uppercase font-mono">${a.entity}</span>
+            </div>
+            <p class="text-xs text-slate-600 font-medium">Actor: <strong>${a.actor}</strong> (${a.role})</p>
+            ${a.reason ? `<p class="text-xs text-slate-500 italic">"${a.reason}"</p>` : ''}
+          </div>
+          <span class="font-mono text-[11px] text-slate-400">${a.time}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderNotifications() {
+      const list = document.getElementById('notifications-list');
+      const filtered = state.notifications.filter(n => n.role === currentRole || n.role === 'ALL');
+      document.getElementById('notif-badge').textContent = filtered.length;
+
+      list.innerHTML = filtered.map(n => `
+        <div class="p-3 rounded-lg border text-xs ${
+          n.severity === 'CRITICAL' ? 'bg-red-50 border-red-200 text-red-900' :
+          n.severity === 'WARNING' ? 'bg-amber-50 border-amber-200 text-amber-900' :
+          'bg-slate-50 border-slate-200 text-slate-800'
+        }">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-[10px] uppercase font-mono">${n.severity}</span>
+            <span class="text-[10px] text-slate-400">${n.time}</span>
+          </div>
+          <p class="font-medium">${n.message}</p>
+        </div>
+      `).join('');
+    }
+
+    function triggerSlaWatchdog() {
+      state.notifications.unshift({
+        id: `N-${Date.now()}`,
+        role: "SUPERVISOR",
+        severity: "CRITICAL",
+        message: "SLA WATCHDOG ALERT: Application APP-2026-1007 has exceeded 25 days in Scrutiny stage. Automatic escalation triggered to Bureau Officer.",
+        time: "Just now"
+      });
+      state.audit.unshift({
+        id: `A-${Date.now()}`,
+        actor: "System SLA Watchdog",
+        role: "SYSTEM",
+        action: "SLA_WATCHDOG_ESCALATION",
+        entity: "APPLICATION",
+        reason: "25-day scrutiny SLA ceiling breached",
+        time: "Just now"
+      });
+      showToast("Watchdog scan completed: 1 critical SLA escalation dispatched to Bureau Officer.");
+      renderNotifications();
+      renderDashboard();
+    }
+
+    function resetDemoData() {
+      if (!confirm("Reset all applications, compliance records, and EVC queues back to standard SIH 2026 baseline?")) return;
+      state = JSON.parse(JSON.stringify(initialData));
+      showToast("Demonstration dataset reset to initial state.");
+      renderDashboard();
+      renderApplications();
+      renderEVC();
+      renderCompliance();
+      renderDocuments();
+      renderAudit();
+      renderNotifications();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // Initial render
+    window.onload = function() {
+      renderDashboard();
+      renderNotifications();
+    };
+  </script>
+</body>
+</html>
