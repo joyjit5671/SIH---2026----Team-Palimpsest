@@ -11,7 +11,7 @@ from app.schemas import (
     ApplicationListResponse, ApplicationSummary, ApplicationDetail,
     WorkflowEventRead, ReturnApplicationRequest, ReturnApplicationResponse,
     TransitionApplicationRequest, TransitionApplicationResponse,
-    ResubmitApplicationRequest, ApplicationStatus
+    ResubmitApplicationRequest, ApplicationStatus, InstitutionSummary
 )
 from app.services.workflow import WorkflowService
 from app.services.deadlines import DeadlineService
@@ -156,7 +156,14 @@ def get_application_detail(id: str, db: Session = Depends(get_db)):
         requested_clarifications=requested_clarifications,
         submitted_at=app.submitted_at,
         updated_at=app.updated_at,
-        timeline=timeline
+        timeline=timeline,
+        institution=InstitutionSummary(
+            id=app.institution.id,
+            institution_code=app.institution.institution_code,
+            name=app.institution.name,
+            region=app.institution.region,
+            state=app.institution.region
+        ) if app.institution else None
     )
 
 @router.get("/{id}/timeline", response_model=List[WorkflowEventRead])

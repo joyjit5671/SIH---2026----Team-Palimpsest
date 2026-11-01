@@ -114,6 +114,16 @@ class WorkflowEventRead(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class InstitutionSummary(BaseModel):
+    id: str
+    institution_code: str
+    name: str
+    region: str
+    state: str = ""
+    contact_email: Optional[str] = None
+    established_year: Optional[int] = None
+    model_config = ConfigDict(from_attributes=True)
+
 class ApplicationDetail(BaseModel):
     id: str
     application_number: str
@@ -137,6 +147,7 @@ class ApplicationDetail(BaseModel):
     submitted_at: datetime
     updated_at: datetime
     timeline: List[WorkflowEventRead] = Field(default_factory=list)
+    institution: Optional[InstitutionSummary] = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -235,13 +246,23 @@ class WorkloadItem(BaseModel):
 
 class DashboardSummary(BaseModel):
     total_applications: int
-    by_stage: Dict[str, int]
-    by_status: Dict[str, int]
-    overdue_count: int
-    upcoming_expiries: int
-    pending_evc: int
-    workload: List[WorkloadItem]
-    recent_activity: List[WorkflowEventRead]
+    pending_scrutiny: int = 0
+    pending_evc: int = 0
+    under_sac_shc: int = 0
+    returned_for_clarification: int = 0
+    approved_count: int = 0
+    rejected_count: int = 0
+    overdue_count: int = 0
+    upcoming_expiries: int = 0
+    pending_compliance: int = 0
+    by_stage: Dict[str, int] = Field(default_factory=dict)
+    by_status: Dict[str, int] = Field(default_factory=dict)
+    stage_distribution: Dict[str, int] = Field(default_factory=dict)
+    status_distribution: Dict[str, int] = Field(default_factory=dict)
+    regional_workload: Dict[str, int] = Field(default_factory=dict)
+    ageing_buckets: Dict[str, int] = Field(default_factory=dict)
+    workload: List[WorkloadItem] = Field(default_factory=list)
+    recent_activity: List[WorkflowEventRead] = Field(default_factory=list)
 
 # ================= Notifications =================
 
