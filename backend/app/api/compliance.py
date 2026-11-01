@@ -159,3 +159,81 @@ def review_undertaking(id: str, req: UndertakingReviewRequest, db: Session = Dep
         verified_at=u.verified_at,
         verified_by=u.verified_by
     )
+
+# Dedicated Documents Vault Router for Frontend Integration
+documents_router = APIRouter(prefix="/documents", tags=["Documents Vault"])
+
+@documents_router.get("")
+def get_documents_vault(status: Optional[str] = None, db: Session = Depends(get_db)):
+    """
+    Returns document items formatted for the Document Expiry & Lease Validity Vault.
+    """
+    query = db.query(Document).order_by(Document.expires_on.asc())
+    if status:
+        query = query.filter(Document.review_status == status)
+    docs = query.all()
+    results = []
+    for d in docs:
+        results.append({
+            "id": d.id,
+            "application_id": d.application_id,
+            "institution_id": d.institution_id,
+            "institution_name": d.institution.name if d.institution else "Apex Institute of Technology & Management",
+            "document_type": d.document_type,
+            "filename": f"{d.document_type.replace(' ', '_')}_{d.valid_from.year if d.valid_from else '2026'}.pdf",
+            "valid_from": d.valid_from.isoformat() if d.valid_from else None,
+            "expires_on": d.expires_on.isoformat() if d.expires_on else None,
+            "review_status": d.review_status,
+            "verified_by": getattr(d, "verified_by", "Scrutiny Board"),
+            "verified_at": getattr(d, "verified_at", d.created_at).isoformat() if getattr(d, "verified_at", d.created_at) else None,
+            "created_at": d.created_at.isoformat() if d.created_at else None,
+        })
+    return results
+
+@documents_router.post("/{id}/renew")
+def renew_document(id: str, payload: dict = None, db: Session = Depends(get_db)):
+    """
+    Simulates renewal submission for expired or expiring documents.
+    """
+    doc = db.query(Document).filter(Document.id == id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail=f"Document '{id}' not found")
+    
+    doc.review_status = "RENEWAL_SUBMITTED"
+    AuditService.record_event(
+        db=db,
+        actor_id="inst-rep-01",
+        actor_role="INSTITUTION_REP",
+        action="SUBMIT_DOCUMENT_RENEWAL",
+        entity_type="DOCUMENT",
+        entity_id=doc.id,
+        before={"review_status": "EXPIRED"},
+        after={"review_status": "RENEWAL_SUBMITTED"},
+        reason="Renewed deed/NOC uploaded by institution."
+    )
+    db.commit()
+    return {"success": True, "message": "Renewal evidence submitted for verification."}
+
+@documents_router.post("/{id}/verify")
+def verify_document(id: str, payload: dict = None, db: Session = Depends(get_db)):
+    """
+    Verifies renewal and marks document VALID.
+    """
+    doc = db.query(Document).filter(Document.id == id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail=f"Document '{id}' not found")
+    
+    doc.review_status = "VALID"
+    AuditService.record_event(
+        db=db,
+        actor_id="scrutiny-officer",
+        actor_role="SCRUTINY_OFFICER",
+        action="VERIFY_DOCUMENT_RENEWAL",
+        entity_type="DOCUMENT",
+        entity_id=doc.id,
+        before={"review_status": "RENEWAL_SUBMITTED"},
+        after={"review_status": "VALID"},
+        reason=(payload and payload.get("remarks")) or "Renewal confirmed compliant with AICTE norms."
+    )
+    db.commit()
+    return {"success": True, "message": "Document verified as VALID."}

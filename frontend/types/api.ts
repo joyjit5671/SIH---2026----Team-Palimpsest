@@ -72,6 +72,7 @@ export interface DocumentItem {
   id: string;
   application_id?: string;
   institution_id: string;
+  institution_name?: string;
   document_type: string;
   filename: string;
   valid_from?: string;

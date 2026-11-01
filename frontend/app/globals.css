@@ -3,31 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --background: #F8FAFC;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --border: #E2E8F0;
-  --sidebar: #0B192C;
+  --background: #0A0C10;
+  --foreground: #F1F5F9;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-/* Custom subtle scrollbars */
+/* Custom sleek scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #0A0C10;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-  border-radius: 3px;
+  background: #1D222D;
+  border-radius: 4px;
+  border: 1px solid rgba(226, 232, 240, 0.1);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #800020;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(21, 25, 33, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(29, 34, 45, 0.85);
+  border-color: rgba(226, 232, 240, 0.22);
 }
