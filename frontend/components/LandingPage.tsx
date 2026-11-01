@@ -6,6 +6,7 @@ import { InteractiveParticles } from './InteractiveParticles';
 import { SpotlightNavbar } from './SpotlightNavbar';
 import { AppleFeatureBlock } from './AppleFeatureBlock';
 import { FullscreenLiquidSurface } from './FullscreenLiquidSurface';
+import { PlatinumWineParticles } from './PlatinumWineParticles';
 import { HeroLoginGenerateButton } from './HeroLoginGenerateButton';
 import { AuthSidebar } from './AuthSidebar';
 import { Sparkles, ShieldCheck, CheckCircle2, ChevronDown, ArrowRight } from 'lucide-react';
@@ -79,6 +80,9 @@ export default function LandingPage({ onOpenPrivacy, onOpenTerms, onOpenAuth }: 
           onFormed={handleLiquidReady}
           className="absolute inset-0 w-full h-full z-0 cursor-crosshair"
         />
+
+        {/* Floating Ambient Platinum & Deep Wine Red Particles */}
+        <PlatinumWineParticles />
 
         {/* Ambient Silver Sheen */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-white/[0.02] rounded-full blur-[140px] pointer-events-none" />
